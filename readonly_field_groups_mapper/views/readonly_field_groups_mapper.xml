@@ -11,6 +11,9 @@
                     <field name="model"/>
                     <field name="field"/>
                     <field name="groups"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Models" context="{'group_by' : 'model'}"/>
+                    </group>
                 </search>
             </field>
         </record>
