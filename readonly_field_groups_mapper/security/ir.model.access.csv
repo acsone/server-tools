@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_readonly_field_groups_mapper_group_no_one,access.readonly.field.groups.mapper.group.no.one,model_readonly_field_group_mapper,base.group_no_one,1,1,1,1
