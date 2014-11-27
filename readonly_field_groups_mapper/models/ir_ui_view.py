@@ -40,10 +40,9 @@ class view(orm.Model):
         the MODIFIER attribute of `readonly_field_groups` with a list of groups
         depending of the `readonly.field.group.mapper`
         """
-        if context is None:
-            context = {}
         if node.tag == 'field' and not node.get(MODIFIER):
             mapper_obj = self.pool['readonly.field.group.mapper']
+
             groups = mapper_obj.get_groups(
                 cr, user, model, node.get('name'), context=context)
             if groups:

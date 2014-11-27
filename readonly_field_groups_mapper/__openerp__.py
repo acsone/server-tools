@@ -26,7 +26,7 @@
 #
 ##############################################################################
 {
-    'name': 'Mass Readonly Field Groups',
+    'name': 'Mass Readonly Field Groups Mapper',
     'version': '1.0',
     'author': 'ACSONE SA/NV',
     'maintainer': 'ACSONE SA/NV',
@@ -36,8 +36,8 @@
         'readonly_field_groups',
     ],
     'description': """
-Mass Readonly Field Groups
-==========================
+Mass Readonly Field Groups Mapper
+=================================
 This module improves concept of the module `readonly_field_groups`.
 It allows to set the `modifier_field_groups` attribute depending of the model,
 the field and a list of groups. Those parameters are managed into a new model

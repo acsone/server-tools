@@ -11,6 +11,7 @@
                     <field name="model"/>
                     <field name="field"/>
                     <field name="groups"/>
+                    <field name="model_mode"/>
                     <group expand="0" string="Group By">
                         <filter string="Models" context="{'group_by' : 'model'}"/>
                     </group>
@@ -27,6 +28,7 @@
                     <field name="model"/>
                     <field name="field"/>
                     <field name="groups"/>
+                    <field name="model_mode"/>
                 </tree>
             </field>
         </record>

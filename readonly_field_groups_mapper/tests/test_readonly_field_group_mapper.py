@@ -25,6 +25,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###############################################################################
 from anybox.testing.openerp import SharedSetupTransactionCase
+from openerp.osv import orm
 
 NAME_GROUP = 'res_groups_test_readonly'
 
@@ -45,6 +46,21 @@ class test_readonly_field_group(SharedSetupTransactionCase):
         self.registry('ir.model').clear_caches()
         self.registry('ir.model.data').clear_caches()
 
+    def test_unicity_mapper(self):
+        model = 'res.partner'
+        field = 'phone'
+        groups = 'base.group_portal'
+        vals = {
+            'model': model,
+            'field': field,
+            'groups': groups,
+        }
+        self.mapper_obj.create(vals)
+        self.assertRaises(orm.except_orm, self.mapper_obj.create, vals)
+        vals['model_mode'] = 'customer'
+        self.mapper_obj.create(vals)
+        self.assertRaises(orm.except_orm, self.mapper_obj.create, vals)
+
     def test_get_groups(self):
         """
         test cases:d
@@ -56,9 +72,12 @@ class test_readonly_field_group(SharedSetupTransactionCase):
         groups = 'base.group_portal'
         vals = {
             'model': model,
+            'model_mode': 'customer',
             'field': field,
             'groups': groups,
         }
+        ctx = self.env.context.copy()
+        ctx['model_mode'] = 'customer'
         self.mapper_obj.create(vals)
-        self.assertEqual(self.mapper_obj.get_groups(model, field),
-                         groups, 'Should be the same group')
+        self.assertEqual(self.mapper_obj.with_context(ctx).get_groups(
+            model, field), groups, 'Should be the same group')

@@ -25,7 +25,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp import models, fields, api, tools
+from openerp import models, fields, api, tools, _
+from openerp.exceptions import Warning
 
 
 class readonly_field_group_mapper(models.Model):
@@ -35,16 +36,25 @@ class readonly_field_group_mapper(models.Model):
     _rec_name = 'model'
 
     model = fields.Char(string='Model', required=True)
+    model_mode = fields.Char(string='Mode')
     field = fields.Char(string='Field', required=True)
     groups = fields.Char(string='Groups', required=True)
 
-    _sql_constraints = [
-        ('mapper_uniq', 'unique(model, field)',
-         'Only one Mapper by model/field')]
+    @api.one
+    @api.constrains('model', 'model_mode', 'field')
+    def _check_uniq_mapper(self):
+        domain = [
+            ('model', '=', self.model),
+            ('model_mode', '=', self.model_mode),
+            ('field', '=', self.field)]
+        if len(self.search(domain)) > 1:
+            raise Warning(
+                _('Only One "Mapper" for model/model_mode/field is Allowed'))
 
-    @api.model
-    @tools.ormcache()
-    def get_groups(self, model, field):
+    @api.cr_uid_context
+    @tools.ormcache_context(accepted_keys=('model_mode',))
+    def get_groups(
+            self, cr, uid, model, field, context=None):
         """
         Search after a mapper record that match with model/field
 
@@ -54,11 +64,23 @@ class readonly_field_group_mapper(models.Model):
         :param model: field associated to the model
         :rtype: char/boolean
         :rparam: groups value for the found record or False if no match
+
+        **Note**
+        context could contain a key 'model_mode' that specifies the way the
+        model is used. ie: res.partner is used as supplier and customer but for
+        other concept too.
         """
-        mapper_id = self.search([('model', '=', model), ('field', '=', field)])
-        if mapper_id:
-            return mapper_id[0].groups
-        return False
+        context = context or {}
+        model_mode = context.get('model_mode', False)
+        sql_order = """ SELECT groups
+            FROM %s
+            WHERE model = %%s AND field=%%s
+            AND model_mode """
+        sql_order += model_mode and "= '%s'" % model_mode or "is NULL"
+        cr.execute(sql_order % self._table, (model, field))
+
+        r = [x[0] for x in cr.fetchall()]
+        return r and r[0] or r
 
     @api.model
     @api.returns('self', lambda value: value.id)
@@ -71,11 +93,11 @@ class readonly_field_group_mapper(models.Model):
         return res
 
     @api.multi
-    def write(self, ids, vals):
+    def write(self, vals):
         """
         Invalidate cache
         """
-        res = super(readonly_field_group_mapper, self).write(ids, vals)
+        res = super(readonly_field_group_mapper, self).write(vals)
         self.get_groups.clear_cache(self)
         return res
 
