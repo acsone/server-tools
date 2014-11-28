@@ -94,7 +94,8 @@ class test_ir_ui_view(SharedSetupTransactionCase):
         self.assertTrue(phone_node.get('readonly'),
                         'This field should now be "readonly=1"')
 
-        phone_node.set(['attrs'], '{"invisible": [("1","=","1")]}')
+        phone_node.set(['attrs'], '{"invisible": [("1","=","1")],"required"'
+                       ':[("name", "=", "-1")]}')
         phone_node.set(['required'], '1')
         phone_node.set([MODIFIER], '%s.%s' % (self._module_ns, NAME_GROUP))
 
@@ -106,8 +107,8 @@ class test_ir_ui_view(SharedSetupTransactionCase):
         phone_node = root.find('.//field[@name="phone"]')
         self.assertTrue(phone_node.get('readonly'),
                         'This field should be "readonly=1"')
-        self.assertFalse(phone_node.get('invisible'),
-                         'attrs should not be apply')
+        self.assertTrue(phone_node.get('invisible'),
+                        'attrs should not be apply')
         self.assertFalse(phone_node.get('required'),
                          'readonly field should not be required')
         group_id = self.ref(full_group_name)

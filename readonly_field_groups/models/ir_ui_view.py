@@ -56,7 +56,9 @@ class view(orm.Model):
                         node.get(MODIFIER), context=context):
                     node.set('readonly', '1')
                     if ATTRS in node.attrib:
-                        del(node.attrib[ATTRS])
+                        attrs = eval(node.attrib[ATTRS])
+                        attrs.pop('required', False)
+                        node.attrib[ATTRS] = str(attrs)
                     if REQUIRED in node.attrib:
                         del(node.attrib[REQUIRED])
                         # avoid to remove read-only later
