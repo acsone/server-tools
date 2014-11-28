@@ -47,11 +47,12 @@ class view(orm.Model):
         """
         model_obj = self.pool.get(model)
         is_field = node.tag == 'field'
+        name = node.get('name')
 
         if node.get(MODIFIER):
             if is_field:
                 if not self._has_write_access_field(
-                        cr, uid, model, node.get('name'),
+                        cr, uid, model, name,
                         node.get(MODIFIER), context=context):
                     node.set('readonly', '1')
                     if ATTRS in node.attrib:
@@ -62,12 +63,12 @@ class view(orm.Model):
             del(node.attrib[MODIFIER])
             return
         # if not found into view then check into the model
-        if is_field and node.get('name') in model_obj._fields:
-            field = model_obj._fields[node.get('name')]
+        if is_field and name in model_obj._fields:
+            field = model_obj._fields[name]
             groups = getattr(field, MODIFIER, False)
             if groups:
                 if not self._has_write_access_field(
-                        cr, uid, model, node.get('name'), groups,
+                        cr, uid, model, name, groups,
                         context=context):
                     node.set('readonly', '1')
         return
