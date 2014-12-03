@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<openerp>
+    <data noupdate="0">
+
+        <!-- Search -->
+        <record id="readonly_field_group_mapper_search_view" model="ir.ui.view">
+            <field name="name">readonly.field.group.mapper.search</field>
+            <field name="model">readonly.field.group.mapper</field>
+            <field name="arch" type="xml">
+                <search string="Readonly Field Group Mapper">
+                    <field name="model"/>
+                    <field name="field"/>
+                    <field name="groups"/>
+                    <field name="model_mode"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Models" context="{'group_by' : 'model'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Tree -->
+        <record id="readonly_field_group_mapper_tree_view" model="ir.ui.view">
+            <field name="name">readonly.field.group.mapper.tree</field>
+            <field name="model">readonly.field.group.mapper</field>
+            <field name="arch" type="xml">
+                <tree string="Readonly Field Group Mapper" editable="top">
+                    <field name="model"/>
+                    <field name="field"/>
+                    <field name="groups"/>
+                    <field name="model_mode"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="readonly_field_group_mapper_action" model="ir.actions.act_window">
+            <field name="name">Readonly Field Group Mappers</field>
+            <field name="res_model">readonly.field.group.mapper</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="readonly_field_group_mapper_search_view" />
+            <field name="view_id" eval="readonly_field_group_mapper_tree_view"/>
+        </record>
+
+        <!-- Menu -->
+        <!-- Parent menu: user interface -->
+        <menuitem sequence="99"
+            id="readonly_field_group_mapper" parent="base.next_id_2"
+            name="Readonly Field Group Mappers"
+            action="readonly_field_group_mapper_action"/>
+
+    </data>
+</openerp>
