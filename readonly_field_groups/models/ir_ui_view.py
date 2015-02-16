@@ -28,6 +28,7 @@
 from openerp.osv import orm
 ATTRS = 'attrs'
 REQUIRED = 'required'
+READONLY = 'readonly'
 MODIFIER = 'modifier_field_groups'
 
 
@@ -54,10 +55,10 @@ class view(orm.Model):
                 if not self._has_write_access_field(
                         cr, uid, model, name,
                         node.get(MODIFIER), context=context):
-                    node.set('readonly', '1')
+                    node.set(READONLY, '1')
                     if ATTRS in node.attrib:
                         attrs = eval(node.attrib[ATTRS])
-                        attrs.pop('required', False)
+                        attrs.pop(REQUIRED, False)
                         node.attrib[ATTRS] = str(attrs)
                     if REQUIRED in node.attrib:
                         del(node.attrib[REQUIRED])
@@ -72,7 +73,7 @@ class view(orm.Model):
                 if not self._has_write_access_field(
                         cr, uid, model, name, groups,
                         context=context):
-                    node.set('readonly', '1')
+                    node.set(READONLY, '1')
         return
 
     def postprocess(self, cr, user, model, node, view_id, in_tree_view,
