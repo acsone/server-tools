@@ -22,6 +22,7 @@
     "name": "LDAP Populate",
     "version": "1.2",
     "author": "Therp BV",
+    "license": "AGPL-3",
     "category": 'Tools',
     "description": """
 This module allows to prepopulate the user database with all entries in the
@@ -39,10 +40,10 @@ object you want to query.
 """,
     "depends": [
         'auth_ldap',
-        ],
+    ],
     "data": [
         'view/users_ldap.xml',
         'view/populate_wizard.xml',
-        ],
+    ],
     'installable': True,
 }
