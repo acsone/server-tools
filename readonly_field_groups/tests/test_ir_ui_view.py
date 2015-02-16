@@ -84,7 +84,7 @@ class test_ir_ui_view(SharedSetupTransactionCase):
         self.assertFalse(phone_node.get('readonly'),
                          'This field should not have "readonly" attribute')
 
-        phone_node.set([MODIFIER], full_group_name)
+        phone_node.set(MODIFIER, full_group_name)
         xarch = self.view_obj.postprocess_and_fields(
             cr, uid, model_form, root, view_id,
             context=context)[0]
@@ -94,10 +94,10 @@ class test_ir_ui_view(SharedSetupTransactionCase):
         self.assertTrue(phone_node.get('readonly'),
                         'This field should now be "readonly=1"')
 
-        phone_node.set(['attrs'], '{"invisible": [("1","=","1")],"required"'
+        phone_node.set('attrs', '{"invisible": [("1","=","1")],"required"'
                        ':[("name", "=", "-1")]}')
-        phone_node.set(['required'], '1')
-        phone_node.set([MODIFIER], '%s.%s' % (self._module_ns, NAME_GROUP))
+        phone_node.set('required', '1')
+        phone_node.set(MODIFIER, '%s.%s' % (self._module_ns, NAME_GROUP))
 
         xarch = self.view_obj.postprocess_and_fields(
             cr, uid, model_form, root, view_id,
@@ -107,8 +107,8 @@ class test_ir_ui_view(SharedSetupTransactionCase):
         phone_node = root.find('.//field[@name="phone"]')
         self.assertTrue(phone_node.get('readonly'),
                         'This field should be "readonly=1"')
-        self.assertTrue(phone_node.get('invisible'),
-                        'attrs should not be apply')
+        self.assertFalse(phone_node.get('invisible'),
+                         'attrs should not be apply')
         self.assertFalse(phone_node.get('required'),
                          'readonly field should not be required')
         group_id = self.ref(full_group_name)
@@ -119,7 +119,7 @@ class test_ir_ui_view(SharedSetupTransactionCase):
 
         root = etree.fromstring(view_values['arch'])
         phone_node = root.find('.//field[@name="phone"]')
-        phone_node.set([MODIFIER], '%s.%s' % (self._module_ns, NAME_GROUP))
+        phone_node.set(MODIFIER, '%s.%s' % (self._module_ns, NAME_GROUP))
         xarch = self.view_obj.postprocess_and_fields(
             cr, uid, model_form, root, view_id,
             context=context)[0]
