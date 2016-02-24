@@ -1,3 +1,5 @@
+# coding: utf-8
+
 import os
 import logging
 from datetime import datetime
@@ -65,6 +67,7 @@ class ProfilerController(openerpweb.Controller):
     def initial_state(self, request):
         user = request.session.model('res.users')
         return {
-            'has_player_group': user.has_group('profiler.group_profiler_player'),
+            'has_player_group': user.has_group(
+                'profiler.group_profiler_player'),
             'player_state': ProfilerController.player_state,
         }

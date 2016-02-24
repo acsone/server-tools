@@ -1,3 +1,5 @@
+# coding: utf-8
+
 from contextlib import contextmanager
 profile = None
 """The thread-shared profile object.

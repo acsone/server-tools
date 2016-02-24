@@ -1,4 +1,5 @@
-#==============================================================================
+# coding: utf-8
+# ============================================================================
 #                                                                             =
 #    profiler module for OpenERP, cProfile integration for Odoo/OpenERP
 #    Copyright (C) 2014 Anybox <http://anybox.fr>
@@ -19,17 +20,22 @@
 #    v3 or later along with this program.
 #    If not, see <http://www.gnu.org/licenses/>.
 #                                                                             =
-#==============================================================================
+# =============================================================================
 {
     'name': 'profiler',
-    'version': '8.0.0.1',
+    'version': '8.0.1.0.0',
     'category': 'devtools',
-    'description': """
-    cprofile integration for Odoo/OpenERP. Check the Profiler menu in admin menu
-    """,
-    'author': 'Georges Racinet',
-    'website': 'http://anybox.fr',
+    'author': 'Odoo Community Association (OCA),Georges Racinet,Vauxoo',
+    'website': 'https://odoo-community.org,'
+    'http://anybox.fr,https://www.vauxoo.com/',
     'depends': ['base', 'web'],
+    'images': [
+        'doc/static/player.png'
+        'doc/static/start_profiling.png',
+        'doc/static/stop_profiling.png',
+        'doc/static/dump_stats.png',
+        'doc/static/clear_stats.png',
+    ],
     'data': [
         'security/group.xml',
         'views/profiler.xml'
