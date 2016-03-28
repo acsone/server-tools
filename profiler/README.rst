@@ -1,8 +1,8 @@
-cProfile integration for OpenERP
-================================
+Profiler
+========
 
 The module ``profiler`` provides a very basic integration of
-the standard ``cProfile`` into OpenERP/Odoo.
+the standard ``cProfile``.
 
 Basic usage
 -----------
