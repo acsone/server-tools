@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="module_prototyper_base_form_view" model="ir.ui.view">
+            <field name="name">Base form view for module prototypes (module_prototyper_workflow_activity_action)</field>
+            <field name="model">module_prototyper</field>
+            <field name="inherit_id" ref="module_prototyper.module_prototyper_base_form_view"/>
+            <field name="arch" type="xml">
+                 <field name="transition_ids" position="after">
+                      <label for="activity_action_ids" />
+                      <field name="activity_action_ids" />
+                      <label for="activity_rule_ids" />
+                      <field name="activity_rule_ids" />
+                      <label for="ir_actions_server_ids"/>
+                      <field name="ir_actions_server_ids"/>
+                 </field>
+            </field>
+        </record>
+    </data>
+</openerp>
