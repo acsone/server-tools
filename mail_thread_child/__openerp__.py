@@ -36,5 +36,7 @@
     'depends': [
         'mail',
     ],
-    'data': [],
+    'data': [
+        'security/ir.model.access.csv',
+    ],
 }
