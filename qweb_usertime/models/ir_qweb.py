@@ -1,16 +1,12 @@
 # -*- encoding: utf-8 -*-
-#    This module copyright (C) 2015 Savoir-faire Linux
-#    (<http://www.savoirfairelinux.com>).
-
-""" QWeb usertime : adds support for t-usertime on qweb reports """
+# Copyright 2015 Savoir-faire Linux
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from datetime import datetime
 import logging
 import pytz
-
 from openerp import models
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-
 _logger = logging.getLogger(__name__)
 
 
