@@ -4,15 +4,13 @@ import os
 import logging
 from datetime import datetime
 from tempfile import mkstemp
-import openerp.addons.web.http as openerpweb
+from odoo import http
 from . import core
 
 logger = logging.getLogger(__name__)
 
 
-class ProfilerController(openerpweb.Controller):
-
-    _cp_path = '/web/profiler'
+class ProfilerController(http.Controller):
 
     player_state = 'profiler_player_clear'
     """Indicate the state(css class) of the player:
@@ -22,25 +20,25 @@ class ProfilerController(openerpweb.Controller):
     * profiler_player_disabled
     """
 
-    @openerpweb.jsonrequest
+    @http.route("/web/profiler/enable", type='json', auth="user")
     def enable(self, request):
         logger.info("Enabling")
         core.enabled = True
         ProfilerController.player_state = 'profiler_player_enabled'
 
-    @openerpweb.jsonrequest
+    @http.route("/web/profiler/disable", type='json', auth="user")
     def disable(self, request):
         logger.info("Disabling")
         core.enabled = False
         ProfilerController.player_state = 'profiler_player_disabled'
 
-    @openerpweb.jsonrequest
+    @http.route("/web/profiler/clear", type='json', auth="user")
     def clear(self, request):
         core.profile.clear()
         logger.info("Cleared stats")
         ProfilerController.player_state = 'profiler_player_clear'
 
-    @openerpweb.httprequest
+    @http.route("/web/profiler/dump", type='http', auth="user")
     def dump(self, request, token):
         """Provide the stats as a file download.
 
@@ -63,7 +61,7 @@ class ProfilerController(openerpweb.Controller):
                 ('Content-Type', 'application/octet-stream')
             ], cookies={'fileToken': token})
 
-    @openerpweb.jsonrequest
+    @http.route("/web/profiler/initial_state", type='json', auth="user")
     def initial_state(self, request):
         user = request.session.model('res.users')
         return {

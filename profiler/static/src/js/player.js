@@ -1,5 +1,10 @@
-openerp.profiler = function(instance) {
-    instance.profiler.Player = instance.web.Widget.extend({
+odoo.define('web.profiler', function (require) {
+"use strict";
+var Widget = require('web.Widget');
+var SystrayMenu = require('web.SystrayMenu');
+//var session = require('web.session');
+
+var Player = Widget.extend({
         template: 'profiler.player',
         events: {
             "click .profiler_enable": "enable",
@@ -35,19 +40,6 @@ openerp.profiler = function(instance) {
         },
     });
 
-    instance.web.UserMenu.include({
-        do_update: function () {
-            var self = this;
-            this.update_promise.done(function () {
-                self.rpc('/web/profiler/initial_state', {}).done(function(state) {
-                    if (state.has_player_group) {
-                        this.profiler_player = new instance.profiler.Player(this);
-                        this.profiler_player.prependTo(instance.webclient.$('.oe_systray'));
-                        this.profiler_player.apply_class(state.player_state);
-                    }
-                });
-            });
-            return this._super();
-        },
-    });
-};
+SystrayMenu.Items.push(Player);
+
+});

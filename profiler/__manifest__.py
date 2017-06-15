@@ -23,7 +23,7 @@
 # =============================================================================
 {
     'name': 'profiler',
-    'version': '9.0.1.0.0',
+    'version': '10.0.1.0.0',
     'category': 'devtools',
     'author': 'Odoo Community Association (OCA),Georges Racinet,Vauxoo',
     'website': 'https://odoo-community.org,'

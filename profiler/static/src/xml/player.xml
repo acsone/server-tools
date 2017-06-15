@@ -1,18 +1,28 @@
 <templates>
     <t t-name="profiler.player">
-        <div  class="oe_topbar_item profiler_player">
-            <img class="profiler_enable" 
-                 title="Start profiling"
-                 src="/web/static/src/img/icons/gtk-media-record.png"/>
-            <img class="profiler_disable" 
-                 title="Stop profiling"
-                 src="/web/static/src/img/icons/gtk-media-pause.png"/>
-            <img class="profiler_clear"
-                 title="Clear profiling"
-                 src="/web/static/src/img/icons/gtk-media-stop.png"/>
-            <img class="profiler_dump"
-                 title="Download stats"
-                 src="/web/static/src/img/icons/gtk-floppy.png"/>
-        </div>
+        <li class="profiler_player_menu_item">
+                <a class="profiler_enable" href="#">
+                    <i class="fa fa-play-circle"/>
+                    <span>Start profiling</span>
+                </a>
+        </li>
+        <li class="profiler_player_menu_item">
+                <a class="profiler_disable" href="#">
+                    <i class="fa fa-pause-circle"/>
+                    <span>Sop profiling</span>
+                </a>
+        </li>
+        <li class="profiler_player_menu_item">
+                <a class="profiler_clear" href="#">
+                    <i class="fa fa-stop-circle"/>
+                    <span>Clear profiling</span>
+                </a>
+        </li>
+        <li class="profiler_player_menu_item">
+                <a class="profiler_dump" href="#">
+                    <i class="fa fa-stop-circle"/>
+                    <span>Download stats</span>
+                </a>
+        </li>
     </t>
 </templates>
