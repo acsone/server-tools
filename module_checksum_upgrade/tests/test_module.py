@@ -64,10 +64,12 @@ class TestModule(TransactionCase):
 
     def test_saved_checksums(self):
         Imm = self.env['ir.module.module']
-        self.assertEqual(self.own_module.state, 'installed')
+        base_module = self.env['ir.module.module'].search([
+            ('name', '=', 'base'),
+        ])
+        self.assertEqual(base_module.state, 'installed')
         self.assertFalse(Imm._get_saved_checksums())
         Imm._save_installed_checksums()
         saved_checksums = Imm._get_saved_checksums()
         self.assertTrue(saved_checksums)
-        self.assertEqual(
-            saved_checksums[self.own_module.name], self.own_checksum)
+        self.assertTrue(saved_checksums['base'])
