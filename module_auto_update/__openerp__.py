@@ -22,7 +22,7 @@
         ],
     },
     'depends': [
-        'base',
+        'module_checksum_upgrade',
     ],
     'data': [
         'views/module_views.xml',
