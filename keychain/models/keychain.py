@@ -11,6 +11,12 @@ from openerp.exceptions import ValidationError
 from openerp.tools.config import config
 from openerp.tools.translate import _
 
+try:
+    from openerp.addons.server_environment import serv_config
+except ImportError:  # server_environment not installed or configured
+    serv_config = None
+
+
 _logger = logging.getLogger(__name__)
 
 try:
@@ -187,11 +193,14 @@ class KeychainAccount(models.Model):
                 if key and len(key) > 0  # remove False values
             ]
 
-        if force_env:
-            envs = [force_env]
+        if serv_config and serv_config.has_option('keychain', 'key'):
+            keys = [Fernet(serv_config.get('keychain', 'key'))]
         else:
-            envs = cls._retrieve_env()  # ex: ('dev', False)
-        keys = _get_keys(envs)
+            if force_env:
+                envs = [force_env]
+            else:
+                envs = cls._retrieve_env()  # ex: ('dev', False)
+            keys = _get_keys(envs)
         if len(keys) == 0:
             raise Warning(_(
                 "No 'keychain_key_%s' entries found in config file. "
