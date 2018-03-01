@@ -61,7 +61,9 @@ Contributors
 ------------
 
 * Stéphane Bidoul <stephane.bidoul@acsone.eu> (https://acsone.eu)
-* Second Person <second.person@example.org> (optional company website url)
+* Brent Hughes <brent.hughes@laslabs.com>
+* Juan José Scarafía <jjs@adhoc.com.ar>
+* Jairo Llopis <jairo.llopis@tecnativa.com>
 
 Do not contact contributors directly about support or help with technical issues.
 
