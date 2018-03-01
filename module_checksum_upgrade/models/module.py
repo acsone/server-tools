@@ -72,7 +72,7 @@ class Module(models.Model):
         ], limit=1))
 
     @api.model
-    def _modules_with_changed_checksum(self):
+    def _get_modules_with_changed_checksum(self):
         saved_checksums = self._get_saved_checksums()
         installed_modules = self.search([('state', '=', 'installed')])
         return installed_modules.filtered(
@@ -104,7 +104,7 @@ class Module(models.Model):
 
         _logger.info("Updating modules list...")
         self.update_list()
-        changed_modules = self._modules_with_changed_checksum()
+        changed_modules = self._get_modules_with_changed_checksum()
         if not changed_modules and self._is_install_complete():
             _logger.info("No checksum change detected in installed modules "
                          "and all modules installed, nothing to do.")
