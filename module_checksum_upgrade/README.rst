@@ -25,8 +25,8 @@ Usage
 =====
 
 The main method provided by this module is ``upgrade_changed_checksum``
-on ``ir.module.module``. It runs a database upgrade for all
-modules for which the hash has changed on disk since the last successful
+on ``ir.module.module``. It runs a database upgrade for all installed
+modules for which the hash has changed since the last successful
 run of this method. On success it saves the hashes in the database.
 
 The first time this method is invoked after installing the module, it
