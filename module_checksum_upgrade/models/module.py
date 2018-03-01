@@ -71,7 +71,7 @@ class Module(models.Model):
             ('state', 'in', ('installed', 'uninstalled', 'uninstallable')),
         ], limit=1))
 
-    @api.models
+    @api.model
     def _modules_with_changed_checksum(self):
         saved_checksums = self._get_saved_checksums()
         installed_modules = self.search([('state', '=', 'installed')])
