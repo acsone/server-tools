@@ -2,8 +2,8 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 {
-    'name': 'Module Auto Update Base',
-    'summary': 'Base mechanisme to detect changes to '
+    'name': 'Module Checksum Upgrade',
+    'summary': 'Base mechanism to detect changes to '
                'installed Odoo modules and upgrade them '
                'automatically',
     'version': '9.0.1.0.0',
