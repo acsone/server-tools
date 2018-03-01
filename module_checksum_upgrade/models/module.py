@@ -65,11 +65,11 @@ class Module(models.Model):
         self._save_checksums(checksums)
 
     @api.model
-    def _is_install_complete(self):
-        return not bool(self.search([
+    def _get_modules_partially_installed(self):
+        return self.search([
             '!',
             ('state', 'in', ('installed', 'uninstalled', 'uninstallable')),
-        ], limit=1))
+        ])
 
     @api.model
     def _get_modules_with_changed_checksum(self):
@@ -105,7 +105,7 @@ class Module(models.Model):
         _logger.info("Updating modules list...")
         self.update_list()
         changed_modules = self._get_modules_with_changed_checksum()
-        if not changed_modules and self._is_install_complete():
+        if not changed_modules and not self._get_modules_partially_installed():
             _logger.info("No checksum change detected in installed modules "
                          "and all modules installed, nothing to do.")
             return True
@@ -123,8 +123,12 @@ class Module(models.Model):
         self._save_installed_checksums()
         self.env.cr.commit()  # pylint: disable=invalid-commit
 
-        if self._is_install_complete():
+        partial_modules = self._get_modules_partially_installed()
+        if partial_modules:
+            _logger.info("Upgrade successful "
+                         "but incomplete for the following modules: %s",
+                         ','.join(partial_modules.mapped('name')))
+            return False
+        else:
             _logger.info("Upgrade complete.")
             return True
-        else:
-            return False
