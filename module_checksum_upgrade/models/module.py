@@ -20,6 +20,10 @@ PARAM_EXCLUDE_PATTERNS = \
 _logger = logging.getLogger(__name__)
 
 
+class IncompleteUpgradeError(RuntimeError):
+    pass
+
+
 class Module(models.Model):
     _inherit = 'ir.module.module'
 
@@ -129,10 +133,11 @@ class Module(models.Model):
 
         partial_modules = self._get_modules_partially_installed()
         if partial_modules:
-            _logger.warn("Checksum upgrade successful "
-                         "but incomplete for the following modules: %s",
-                         ','.join(partial_modules.mapped('name')))
-            return False
+            raise IncompleteUpgradeError(
+                "Checksum upgrade successful "
+                "but incomplete for the following modules: %s" %
+                ','.join(partial_modules.mapped('name'))
+            )
         else:
             _logger.info("Checksum upgrade complete.")
             return True
