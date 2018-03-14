@@ -32,7 +32,13 @@ if audit_logger:
             exception = None
             return old_call_function(self, *args, **kw)
         except Exception as e:
-            exception = repr(e)
+            try:
+                exception = repr(e)
+            except Exception:
+                try:
+                    exception = repr(type(e))
+                except Exception:
+                    exception = 'UNKNOWN'
             raise
         finally:
             method = self.endpoint.method.__name__
