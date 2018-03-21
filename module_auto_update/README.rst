@@ -44,6 +44,9 @@ in an Odoo shell session::
 
   env['ir.module.module'].upgrade_changed_checksum()
 
+You can also set the environment variable ``I18N_OVERWRITE=1`` to force
+updating translations when updating the addons.
+
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
    :alt: Try me on Runbot
    :target: https://runbot.odoo-community.org/runbot/149/9.0

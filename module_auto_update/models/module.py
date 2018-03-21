@@ -18,6 +18,7 @@ PARAM_EXCLUDE_PATTERNS = \
     'module_auto_update.exclude_patterns'
 DEFAULT_EXCLUDE_PATTERNS = \
     '*.pyc,*.pyo,i18n/*.pot,i18n_extra/*.pot,static/*'
+DEFAULT_I18N_OVERWRITE = os.environ.get("I18N_OVERWRITE") == "1"
 
 _logger = logging.getLogger(__name__)
 
@@ -85,7 +86,7 @@ class Module(models.Model):
         )
 
     @api.model
-    def upgrade_changed_checksum(self, overwrite_existing_translations=False):
+    def upgrade_changed_checksum(self, i18n_overwrite=DEFAULT_I18N_OVERWRITE):
         """Run an upgrade of the database, upgrading only changed modules.
 
         Installed modules for which the checksum has changed since the
@@ -110,11 +111,10 @@ class Module(models.Model):
         """
         _logger.info(
             "Checksum upgrade starting (i18n-overwrite=%s)...",
-            overwrite_existing_translations
+            i18n_overwrite,
         )
 
-        tools.config['overwrite_existing_translations'] = \
-            overwrite_existing_translations
+        tools.config['overwrite_existing_translations'] = i18n_overwrite
 
         _logger.info("Updating modules list...")
         self.update_list()
