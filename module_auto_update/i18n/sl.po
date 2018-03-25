@@ -4,13 +4,14 @@
 # 
 # Translators:
 # OCA Transbot <transbot@odoo-community.org>, 2017
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 9.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-21 02:43+0000\n"
-"PO-Revision-Date: 2017-07-21 02:43+0000\n"
-"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2017\n"
+"POT-Creation-Date: 2017-10-21 22:54+0000\n"
+"PO-Revision-Date: 2017-10-21 22:54+0000\n"
+"Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>, 2017\n"
 "Language-Team: Slovenian (https://www.transifex.com/oca/teams/23907/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +37,7 @@ msgstr "Modul"
 #. module: module_auto_update
 #: model:ir.model,name:module_auto_update.model_base_module_upgrade
 msgid "Module Upgrade"
-msgstr ""
+msgstr "Nadgradnja modula"
 
 #. module: module_auto_update
 #: model:ir.ui.menu,name:module_auto_update.menu_default_modules
@@ -56,4 +57,4 @@ msgstr ""
 #. module: module_auto_update
 #: model:ir.ui.menu,name:module_auto_update.module_menu_updates
 msgid "Updates"
-msgstr ""
+msgstr "Posodobitve"
