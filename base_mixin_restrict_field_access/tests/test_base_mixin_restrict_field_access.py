@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # © 2016 Therp BV <http://therp.nl>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-from openerp import api, models
-from openerp.osv import expression
-from openerp.tests.common import TransactionCase
+from odoo import api, models
+from odoo.osv import expression
+from odoo.tests.common import TransactionCase
 
 
 class TestBaseMixinRestrictFieldAccess(TransactionCase):
@@ -46,10 +45,10 @@ class TestBaseMixinRestrictFieldAccess(TransactionCase):
         self.env['ir.rule']._register_hook()
 
         # setup the model
-        res_partner = ResPartner._build_model(self.registry, self.cr).browse(
-            self.cr, self.uid, [], context={})
+        res_partner = ResPartner._build_model(self.registry, self.cr)._browse(
+            (), self.env)
         res_partner._prepare_setup()
-        res_partner._setup_base(False)
+        res_partner._setup_base()
         res_partner._setup_fields()
         res_partner._setup_complete()
 
@@ -80,14 +79,14 @@ class TestBaseMixinRestrictFieldAccess(TransactionCase):
         self.assertTrue(new_partner.sudo().credit_limit)
         # check that our field injection works
         fields_view_get = partner.fields_view_get()
-        self.assertIn('restrict_field_access', fields_view_get['arch'])
+        self.assertIn(b'restrict_field_access', fields_view_get['arch'])
         # check that the export does null offending values
-        export = partner._BaseModel__export_rows([['id'], ['credit_limit']])
+        export = partner._export_rows([['id'], ['credit_limit']])
         self.assertEqual(export[0][1], '0.0')
         # but that it does export the value when it's fine
         partner.sudo().write({'credit_limit': 41})
         partner.invalidate_cache()
-        export = partner._BaseModel__export_rows([['id'], ['credit_limit']])
+        export = partner._export_rows([['id'], ['credit_limit']])
         self.assertEqual(export[0][1], '41.0')
         # read_group should behave like search: restrict to records with our
         # field accessible if a restricted field is requested, unrestricted
