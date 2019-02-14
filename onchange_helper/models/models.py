@@ -86,7 +86,10 @@ class Base(models.AbstractModel):
                 record = self
                 record.update(values)
             else:
-                record = self.new(values)
+                # initialize with default values, they may be used in onchange
+                new_values = self.default_get(self._fields.keys())
+                new_values.update(values)
+                record = self.new(new_values)
             values = {name: record[name] for name in record._cache}
             record._origin = origin
 
