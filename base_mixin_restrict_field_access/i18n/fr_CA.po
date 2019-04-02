@@ -20,23 +20,28 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: base_mixin_restrict_field_access
-#: field:restrict.field.access.mixin,display_name:0
+#: model:ir.model.fields,field_description:base_mixin_restrict_field_access.field_restrict_field_access_mixin__display_name
 msgid "Display Name"
 msgstr "Afficher le nom"
 
 #. module: base_mixin_restrict_field_access
-#: field:restrict.field.access.mixin,restrict_field_access:0
+#: model:ir.model.fields,field_description:base_mixin_restrict_field_access.field_restrict_field_access_mixin__restrict_field_access
 msgid "Field access restricted"
 msgstr ""
 
 #. module: base_mixin_restrict_field_access
-#: field:restrict.field.access.mixin,id:0
+#: model:ir.model.fields,field_description:base_mixin_restrict_field_access.field_restrict_field_access_mixin__id
 msgid "ID"
 msgstr "Identifiant"
 
 #. module: base_mixin_restrict_field_access
-#: field:restrict.field.access.mixin,__last_update:0
+#: model:ir.model.fields,field_description:base_mixin_restrict_field_access.field_restrict_field_access_mixin____last_update
 msgid "Last Modified on"
+msgstr ""
+
+#. module: base_mixin_restrict_field_access
+#: model:ir.model,name:base_mixin_restrict_field_access.model_restrict_field_access_mixin
+msgid "Mixin to restrict fields on certain condition"
 msgstr ""
 
 #. module: base_mixin_restrict_field_access
