@@ -45,11 +45,14 @@ class KeychainAccount(models.Model):
     name = fields.Char(required=True, help="Humain readable label")
     technical_name = fields.Char(
         required=True,
-        help="Technical name. Must be unique")
-    namespace = fields.Selection([], help="Type of account", required=True)
+        help="Technical name. Must be unique",
+        index=True)
+    namespace = fields.Selection([], help="Type of account", required=True,
+                                 index=True)
     environment = fields.Char(
         required=False,
-        help="'prod', 'dev', etc. or empty (for all)"
+        help="'prod', 'dev', etc. or empty (for all)",
+        index=True,
     )
     login = fields.Char(help="Login")
     clear_password = fields.Char(
