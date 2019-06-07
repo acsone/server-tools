@@ -87,6 +87,11 @@ def jsonify(self, parser):
                 value = rec[field_name]
                 if value is False and field_type != 'boolean':
                     value = None
+                elif field_type in ('many2one', 'reference'):
+                    if not value:
+                        value = None
+                    else:
+                        value = value.display_name
                 res[json_key] = value
         result.append(res)
     return result
