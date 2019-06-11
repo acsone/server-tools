@@ -92,6 +92,8 @@ def jsonify(self, parser):
                         value = None
                     else:
                         value = value.display_name
+                elif field_type in ('one2many', 'many2many'):
+                    value = [v.display_name for v in value]
                 res[json_key] = value
         result.append(res)
     return result
