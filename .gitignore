@@ -38,8 +38,9 @@ coverage.xml
 # Translations
 *.mo
 
-# Pycharm
+# Pycharm, vscode
 .idea
+.vscode
 
 # Mr Developer
 .mr.developer.cfg
