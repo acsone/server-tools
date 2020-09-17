@@ -1,6 +1,8 @@
-# © 2017 Akretion (http://www.akretion.com)
+# Copyright 2017 Akretion (http://www.akretion.com)
 # Sébastien BEAU <sebastien.beau@akretion.com>
 # Raphaël Reverdy <raphael.reverdy@akretion.com>
+# Copyright 2020 Camptocamp SA (http://www.camptocamp.com)
+# Simone Orsi <simahawk@gmail.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import api, fields, models
@@ -10,30 +12,116 @@ from odoo.tools.translate import _
 
 class Base(models.AbstractModel):
 
-    _inherit = 'base'
+    _inherit = "base"
 
     @api.model
     def __parse_field(self, parser_field):
         """Deduct how to handle a field from its parser."""
-        field_name = parser_field
-        subparser = None
-        if isinstance(parser_field, tuple):
-            field_name, subparser = parser_field
-        json_key = field_name
-        if ':' in field_name:
-            field_name, json_key = field_name.split(':')
-        return field_name, json_key, subparser
+        return parser_field if isinstance(parser_field, tuple) else (parser_field, None)
+
+    @api.model
+    def convert_simple_to_full_parser(self, parser):
+        def _f(f, function=None):
+            field_split = f.split(":")
+            field_dict = {"name": field_split[0]}
+            if len(field_split) > 1:
+                field_dict["alias"] = field_split[1]
+            if function:
+                field_dict["function"] = function
+            return field_dict
+
+        def _convert_parser(parser):
+            result = []
+            for line in parser:
+                if isinstance(line, str):
+                    result.append(_f(line))
+                else:
+                    f, sub = line
+                    if callable(sub) or isinstance(sub, str):
+                        result.append(_f(f, sub))
+                    else:
+                        result.append((_f(f), _convert_parser(sub)))
+            return result
+
+        return {"language_agnostic": False, "fields": _convert_parser(parser)}
+
+    @api.model
+    def _jsonify_bad_parser_error(self, field_name):
+        raise UserError(_("Wrong parser configuration for field: `%s`") % field_name)
+
+    def _function_value(self, record, function, field_name):
+        if function in dir(record):
+            method = getattr(self, function, None)
+            return method(field_name)
+        elif callable(function):
+            return function(record, field_name)
+        else:
+            return self._jsonify_bad_parser_error(field_name)
+
+    @api.model
+    def _jsonify_value(self, record, field, resolver):
+        # TODO: we should get default by field (eg: char field -> "")
+        value = record[field.name]
+        if value is False and field.type != "boolean":
+            value = None
+        elif field.type == "date":
+            value = fields.Date.to_date(value).isoformat()
+        elif field.type == "datetime":
+            # Ensures value is a datetime
+            value = fields.Datetime.to_datetime(value)
+            # Get the timestamp converted to the client's timezone.
+            # This call also add the tzinfo into the datetime object
+            value = fields.Datetime.context_timestamp(record, value)
+            value = value.isoformat()
+        return self._resolve(resolver, field, record)[0] if resolver else value
+
+    @api.model
+    def _resolve(self, resolver, *args):
+        if isinstance(resolver, int):
+            resolver = self.env["ir.exports.resolver"].browse(resolver)
+        return resolver.eval(*args)
+
+    @api.model
+    def _jsonify_record(self, parser, rec, root):
+        for field in parser:
+            field_dict, subparser = rec.__parse_field(field)
+            field_name = field_dict["name"]
+            json_key = field_dict.get("alias", field_name)
+            field = rec._fields[field_name]
+            if field_dict.get("function"):
+                function = field_dict["function"]
+                value = self._function_value(rec, function, field_name)
+            elif subparser:
+                if not (field.relational or field.type == "reference"):
+                    self._jsonify_bad_parser_error(field_name)
+                value = [
+                    self._jsonify_record(subparser, r, {}) for r in rec[field_name]
+                ]
+                if field.type in ("many2one", "reference"):
+                    value = value[0] if value else None
+            else:
+                value = self._jsonify_value(rec, field, field_dict.get("resolver"))
+            if json_key.endswith("*"):  # sublist field
+                key = json_key[:-1]
+                if not root.get(key):
+                    root[key] = []
+                root[key].append(value)
+            else:
+                root[json_key] = value
+        return root
 
     @api.multi
     def jsonify(self, parser):
         """Convert the record according to the given parser.
 
-        Example of parser:
+        Example of (simple) parser:
             parser = [
                 'name',
                 'number',
                 'create_date',
                 ('partner_id', ['id', 'display_name', 'ref'])
+                ('shipping_id', callable)
+                ('delivery_id', "record_method")
                 ('line_id', ['id', ('product_id', ['name']), 'price_unit'])
             ]
 
@@ -49,38 +137,16 @@ class Base(models.AbstractModel):
         ]
 
         """
-        result = []
+        if isinstance(parser, list):
+            parser = self.convert_simple_to_full_parser(parser)
+        resolver = parser.get("resolver")
 
-        for rec in self:
-            res = {}
-            for field in parser:
-                field_name, json_key, subparser = self.__parse_field(field)
-                field_type = rec._fields[field_name].type
-                if subparser:
-                    if field_type in ('one2many', 'many2many'):
-                        res[json_key] = rec[field_name].jsonify(subparser)
-                    elif field_type in ('many2one', 'reference'):
-                        if rec[field_name]:
-                            res[json_key] =\
-                                rec[field_name].jsonify(subparser)[0]
-                        else:
-                            res[json_key] = None
-                    else:
-                        raise UserError(_('Wrong parser configuration'))
-                else:
-                    value = rec[field_name]
-                    if value is False and field_type != 'boolean':
-                        value = None
-                    elif field_type == "date":
-                        value = fields.Date.to_date(value).isoformat()
-                    elif field_type == "datetime":
-                        # Ensures value is a datetime
-                        value = fields.Datetime.to_datetime(value)
-                        # Get the timestamp converted to the client's timezone.
-                        # This call also add the tzinfo into the datetime
-                        # object
-                        value = fields.Datetime.context_timestamp(rec, value)
-                        value = value.isoformat()
-                    res[json_key] = value
-            result.append(res)
-        return result
+        results = [{} for record in self]
+        parsers = {False: parser["fields"]} if "fields" in parser else parser["langs"]
+        for lang in parsers:
+            translate = lang or parser.get("language_agnostic")
+            records = self.with_context(lang=lang) if translate else self
+            for record, json in zip(records, results):
+                self._jsonify_record(parsers[lang], record, json)
+
+        return self._resolve(resolver, results, self) if resolver else results
