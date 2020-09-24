@@ -27,7 +27,7 @@ class Base(models.AbstractModel):
         return field_name, json_key, subparser
 
     @api.multi
-    def jsonify(self, parser):
+    def jsonify(self, parser, one=False):
         """Convert the record according to the given parser.
 
         Example of parser:
@@ -42,7 +42,8 @@ class Base(models.AbstractModel):
             ]
 
         In order to be consistent with the odoo api the jsonify method always
-        return a list of object even if there is only one element in input
+        return a list of object even if there is only one element in input.
+        You can change this behavior by passing `one=True` to get only one element.
 
         By default the key into the json is the name of the field extracted
         from the model. If you need to specify an alternate name to use as
@@ -53,6 +54,9 @@ class Base(models.AbstractModel):
         ]
 
         """
+        if one:
+            self.ensure_one()
+
         result = []
 
         for rec in self:
@@ -64,6 +68,8 @@ class Base(models.AbstractModel):
                 else:
                     res[json_key] = rec._jsonify_value(field_name)
             result.append(res)
+        if one:
+            return result[0] if result else {}
         return result
 
     def _jsonify_value(self, field_name):
