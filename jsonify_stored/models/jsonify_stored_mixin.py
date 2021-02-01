@@ -12,6 +12,44 @@ class JsonifyStored(models.AbstractModel):
        (however it's fine to modify an existing one in the module data).
     """
 
+    _name = "jsonify.stored.mixin"
+    _description = "Stores json data"
+
+    _export_xmlid = ""  # override this key when inheriting this mixin
+
+    jsonify_data = fields.Serialized(
+        string="Jsonify: Data",
+        compute="_compute_jsonify_data",
+        readonly=True,
+        store=False,
+        help="Json export value. Always up-to-date, triggers a recompute if necessary.",
+    )
+    jsonify_data_todo = fields.Boolean(
+        string="Jsonify: Todo",
+        compute="_compute_jsonify_data_todo",
+        default=True,
+        readonly=True,
+        store=True,
+        help="If True, the stored json data needs to be recomputed.",
+    )
+    jsonify_data_stored = fields.Serialized(
+        string="Jsonify: Stored",
+        compute="_compute_jsonify_data_stored",
+        readonly=True,
+        store=True,
+        help="Last computed Json export value. Might not be up to date.",
+    )
+
+    @api.model
+    def _jsonify_get_export(self):
+        xml_id = self._export_xmlid
+        return self.env.ref(xml_id) if xml_id else self.env["ir.exports"]
+
+    @api.model
+    def _jsonify_get_export_depends(self):
+        export_field_names = self._jsonify_get_export().export_fields.mapped("name")
+        return tuple(fn.replace("/", ".") for fn in export_field_names)
+
     @api.depends(lambda self: self._jsonify_get_export_depends())
     def _compute_jsonify_data_todo(self):
         for record in self:
@@ -30,44 +68,6 @@ class JsonifyStored(models.AbstractModel):
         self.filtered("jsonify_data_todo")._compute_jsonify_data_stored()
         for record in self:
             record.jsonify_data = record.jsonify_data_stored
-
-    _name = "jsonify.stored.mixin"
-    _description = "Stores json data"
-
-    _export_xmlid = ""  # override this key when inheriting this mixin
-
-    jsonify_data = fields.Serialized(
-        string="Jsonify: Data",
-        compute=_compute_jsonify_data,
-        readonly=True,
-        store=False,
-        help="Json export value. Always up-to-date, triggers a recompute if necessary.",
-    )
-    jsonify_data_todo = fields.Boolean(
-        string="Jsonify: Todo",
-        compute=_compute_jsonify_data_todo,
-        default=True,
-        readonly=True,
-        store=True,
-        help="If True, the stored json data needs to be recomputed.",
-    )
-    jsonify_data_stored = fields.Serialized(
-        string="Jsonify: Stored",
-        compute=_compute_jsonify_data_stored,
-        readonly=True,
-        store=True,
-        help="Last computed Json export value. Might not be up to date.",
-    )
-
-    @api.model
-    def _jsonify_get_export(self):
-        xml_id = self._export_xmlid
-        return self.env.ref(xml_id) if xml_id else self.env["ir.exports"]
-
-    @api.model
-    def _jsonify_get_export_depends(self):
-        export_field_names = self._jsonify_get_export().export_fields.mapped("name")
-        return tuple(fn.replace("/", ".") for fn in export_field_names)
 
     @api.model
     def cron_recompute(self, limit=None):
