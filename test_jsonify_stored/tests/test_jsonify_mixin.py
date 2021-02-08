@@ -63,6 +63,7 @@ class TestJsonifyExport(TestJsonifyMixin):
         self.assertFalse(self.record_2.jsonify_data_todo)
         # when
         self.record_2.boolean = True
+        self.records.flush()
         # then  # it should mark 2 and 2 only for recomputation
         self.assertTrue(self.record_2.jsonify_data_todo)
         self.assertFalse(self.record_1.jsonify_data_todo)
@@ -93,6 +94,7 @@ class TestJsonifyExport(TestJsonifyMixin):
         self.user_2.name = "newname"  # it's now part of the export
 
         # then  # it should now mark it for recomputation
+        self.records.flush()
         self.assertTrue(self.record_2.jsonify_data_todo)
 
         # given # let's start again with everything recomputed
