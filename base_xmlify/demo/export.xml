@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="ir_exp_user_demo" model="ir.exports">
+        <field name="name">Demo User Export</field>
+        <field name="resource">res.users</field>
+    </record>
+    <record id="ir_exp_user_demo_line_name" model="ir.exports.line">
+        <field name="name">display_name</field>
+        <field name="export_id" ref="ir_exp_user_demo" />
+    </record>
+</odoo>
