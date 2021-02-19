@@ -11,7 +11,7 @@
     "license": "AGPL-3",
     "author": "Odoo Community Association (OCA), ACSONE SA/NV",
     "website": "https://github.com/OCA/server-tools",
-    "depends": ["base", "connector"],
+    "depends": ["base", "connector", "queue_job"],
     "data": [
         "security/groups.xml",
         "security/auto_export.xml",
