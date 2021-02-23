@@ -310,7 +310,7 @@ class AutoExport(models.Model):
         """
         with open(full_filename, "w+") as export_file:
             writer = csv.writer(export_file)
-            writer.writerows([[s.encode("utf-8") for s in row] for row in csv_rows])
+            writer.writerows([[s for s in row] for row in csv_rows])
 
     def _get_data_to_export(self):
         """
