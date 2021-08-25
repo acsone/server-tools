@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright 2020 ACSONE
 # Nans Lefebvre <nans.lefebvre@acsone.eu>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
@@ -5,7 +6,7 @@
 {
     "name": "Base Ir Exports",
     "summary": "Module providing a wizard to create exports and views on ir.exports",
-    "version": "12.0.1.0.0",
+    "version": "10.0.1.0.0",
     "category": "Uncategorized",
     "website": "https://github.com/OCA/server-tools",
     "author": "Acsone, Odoo Community Association (OCA)",

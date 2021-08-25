@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # © 2020 Acsone (http://www.acsone.eu)
 # Nans Lefebvre <nans.lefebvre@acsone.eu>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
