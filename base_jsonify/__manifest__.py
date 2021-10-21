@@ -4,7 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 {
-    "name": "Base Jsonify",
+    "name": "Base JSONify",
     "summary": "Base module that provide the jsonify method on all models",
     "version": "13.0.3.2.0",
     "category": "Uncategorized",
