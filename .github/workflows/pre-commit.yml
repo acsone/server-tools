@@ -7,6 +7,8 @@ on:
 jobs:
   pre-commit:
     runs-on: ubuntu-latest
+    env:
+      PRE_COMMIT_HOME: .cache/pre-commit
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -14,4 +16,9 @@ jobs:
           # The pylint-odoo version we use here does not support python 3.10
           # https://github.com/OCA/oca-addons-repo-template/issues/80
           python-version: "3.9"
-      - uses: pre-commit/action@v2.0.0
+      - uses: actions/cache@v2
+        with:
+          path: .cache/pre-commit
+          key: pre-commit-py39-${{ hashFiles('.pre-commit-config.yaml') }}
+      - run: pip install pre-commit
+      - run: pre-commit run -a --show-diff-on-failure
