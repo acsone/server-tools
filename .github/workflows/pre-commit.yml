@@ -15,7 +15,9 @@ jobs:
         with:
           # The pylint-odoo version we use here does not support python 3.10
           # https://github.com/OCA/oca-addons-repo-template/issues/80
-          python-version: "3.9"
+          # Moreover the black version we use here depends on a version of typed_ast
+          # that is not compatible with python 3.9.8.
+          python-version: "3.9.7"
       - uses: actions/cache@v2
         with:
           path: .cache/pre-commit
