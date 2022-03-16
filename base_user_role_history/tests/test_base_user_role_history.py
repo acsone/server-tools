@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019 ACSONE SA/NV
+# Copyright 2022 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).µ
 
 from datetime import date, timedelta
 
-from openerp import fields
-from openerp.tests.common import SavepointCase
+from odoo import fields
+from odoo.tests.common import SavepointCase
 
 
 class TestBaseUserRoleHistory(SavepointCase):
