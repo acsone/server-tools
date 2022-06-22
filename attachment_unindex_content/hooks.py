@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 def post_init_hook(cr, registry):
     """Clear the indexed data for records already in database"""
