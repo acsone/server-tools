@@ -25,7 +25,11 @@ def with_cursor(func):
             tries += 1
             try:
                 return func(self, *args, **kwargs)
-            except (psycopg2.InterfaceError, psycopg2.OperationalError) as e:
+            except (
+                psycopg2.InterfaceError,
+                psycopg2.OperationalError,
+                psycopg2.ProgrammingError,
+            ) as e:
                 _logger.info("Session in DB connection Retry %s/5" % tries)
                 if tries > 4:
                     raise e
